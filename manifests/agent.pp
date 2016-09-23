@@ -59,6 +59,7 @@
 class puppet::agent(
   $puppet_agent_service   = $::puppet::params::puppet_agent_service,
   $puppet_agent_package   = $::puppet::params::puppet_agent_package,
+  $puppet_agent_version   = $::puppet::params::puppet_agent_version,
   $version                = 'present',
   $puppet_facter_package  = $::puppet::params::puppet_facter_package,
   $puppet_run_style       = 'service',
@@ -127,15 +128,15 @@ class puppet::agent(
   case $::osfamily {
     'Darwin': {
       package {$puppet_facter_package:
-        ensure   => present,
-        provider => $package_provider,
-        source   => "https://downloads.puppetlabs.com/mac/${puppet_facter_package}",
+        ensure          => present,
+        provider        => $package_provider,
+        install_options => "-v ${puppet_agent}",
       }
-      package { $puppet_agent_package:
-        ensure   => present,
-        provider => $package_provider,
-        source   => "https://downloads.puppetlabs.com/mac/${puppet_agent_package}"
-      }
+      #package { $puppet_agent_package:
+      #  ensure   => present,
+      #  provider => $package_provider,
+      #  source   => "https://downloads.puppetlabs.com/mac/${puppet_agent_package}"
+      #}
     }
     default: {
       package { $puppet_agent_package:
