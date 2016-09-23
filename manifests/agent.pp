@@ -125,9 +125,8 @@ class puppet::agent(
   case $::osfamily {
     'Darwin': {
       package {$puppet_agent_package:
-        ensure          => present,
+        ensure          => $version,
         provider        => $package_provider,
-        install_options => "-v ${version}",
       }
     }
     default: {
