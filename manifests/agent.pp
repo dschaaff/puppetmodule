@@ -130,7 +130,7 @@ class puppet::agent(
       package {$puppet_agent_package:
         ensure          => present,
         provider        => $package_provider,
-        install_options => "-v ${puppet_agent}",
+        install_options => "-v ${puppet_agent_version}",
       }
     }
     default: {
