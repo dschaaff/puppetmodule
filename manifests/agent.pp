@@ -127,16 +127,11 @@ class puppet::agent(
   }
   case $::osfamily {
     'Darwin': {
-      package {$puppet_facter_package:
+      package {$puppet_agent_package:
         ensure          => present,
         provider        => $package_provider,
         install_options => "-v ${puppet_agent}",
       }
-      #package { $puppet_agent_package:
-      #  ensure   => present,
-      #  provider => $package_provider,
-      #  source   => "https://downloads.puppetlabs.com/mac/${puppet_agent_package}"
-      #}
     }
     default: {
       package { $puppet_agent_package:
