@@ -6,8 +6,6 @@
 #   ['puppet_server']         - The dns name of the puppet master
 #   ['puppet_server_port']    - The Port the puppet master is running on
 #   ['puppet_agent_service']  - The service the puppet agent runs under
-#   ['mac_version']           - The package version for Mac OS X
-#   ['mac_facter_version']    - The Factor Version for Mac OS X
 #   ['puppet_agent_package']  - The name of the package providing the puppet agent
 #   ['version']               - The version of the puppet agent to install
 #   ['puppet_run_style']      - The run style of the agent either 'service', 'cron', 'external' or 'manual'
@@ -59,7 +57,6 @@
 class puppet::agent(
   $puppet_agent_service   = $::puppet::params::puppet_agent_service,
   $puppet_agent_package   = $::puppet::params::puppet_agent_package,
-  $puppet_agent_version   = $::puppet::params::puppet_agent_version,
   $version                = 'present',
   $puppet_facter_package  = $::puppet::params::puppet_facter_package,
   $puppet_run_style       = 'service',
@@ -130,7 +127,7 @@ class puppet::agent(
       package {$puppet_agent_package:
         ensure          => present,
         provider        => $package_provider,
-        install_options => "-v ${puppet_agent_version}",
+        install_options => "-v ${version}",
       }
     }
     default: {

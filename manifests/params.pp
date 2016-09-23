@@ -46,7 +46,7 @@ class puppet::params {
       $puppet_master_service        = 'puppetmaster'
       $puppet_agent_service         = 'puppet'
       $puppet_agent_package         = 'puppet'
-      $package_provider                 = undef # falls back to system default
+      $package_provider             = undef # falls back to system default
       $puppet_defaults              = '/etc/sysconfig/puppet'
       $puppet_conf                  = '/etc/puppet/puppet.conf'
       $puppet_vardir                = '/var/lib/puppet'
@@ -91,7 +91,6 @@ class puppet::params {
     }
     'Darwin': {
       $puppet_agent_service         = 'com.puppetlabs.puppet'
-      $puppet_agent_version         = '3.8.7'
       $puppet_agent_package         = 'puppet'
       $package_provider             = 'gem'
       $puppet_conf                  = '/etc/puppet/puppet.conf'
