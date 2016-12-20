@@ -6,7 +6,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'Debian',
         :operatingsystem => 'Debian',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
 
@@ -167,7 +168,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     describe 'when installed' do
@@ -327,7 +329,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with ordering set' do
@@ -389,7 +392,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with trusted set' do
@@ -451,7 +455,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with templatedir set' do
@@ -513,7 +518,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with configtimeout set' do
@@ -551,12 +557,40 @@ describe 'puppet::agent', :type => :class do
       }
     end
   end
+  describe 'puppetagentshow_diff' do
+    let(:facts) do
+      {
+        :osfamily        => 'RedHat',
+        :operatingsystem => 'RedHat',
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
+      }
+    end
+    context 'with show_diff set' do
+      let(:params) do
+        {
+          :show_diff        => true,
+        }
+      end
+
+      it{
+        should contain_ini_setting('puppetagentshow_diff').with(
+          :ensure  => 'present',
+          :section => 'main',
+          :setting => 'show_diff',
+          :value   => true,
+          :path    => '/etc/puppet/puppet.conf'
+        )
+      }
+    end
+  end
   describe 'puppetagentstringifyfacts' do
     let(:facts) do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with stringify_facts set' do
@@ -582,7 +616,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with http_proxy_host set' do
@@ -608,7 +643,8 @@ describe 'puppet::agent', :type => :class do
       {
         :osfamily        => 'RedHat',
         :operatingsystem => 'RedHat',
-        :kernel          => 'Linux'
+        :kernel          => 'Linux',
+        :puppetversion   => '3.8.0'
       }
     end
     context 'with http_proxy_port set' do

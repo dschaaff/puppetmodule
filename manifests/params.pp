@@ -40,6 +40,18 @@ class puppet::params {
   # Only used when environments == directory
   $environmentpath                  = "${confdir}/environments"
 
+  if versioncmp($::puppetversion, "4.0.0") >= 0 {
+    $puppet_conf        = '/etc/puppetlabs/puppet/puppet.conf'
+    $puppet_run_command = '/opt/puppetlabs/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
+    $puppet_vardir      = '/opt/puppetlabs/server/data/puppetserver'
+    $puppet_ssldir      = '/etc/puppetlabs/puppet/ssl'
+  } else {
+    $puppet_conf        = '/etc/puppet/puppet.conf'
+    $puppet_run_command = '/usr/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
+    $puppet_vardir      = '/var/lib/puppet'
+    $puppet_ssldir      = '/var/lib/puppet/ssl'
+  }
+
   case $::osfamily {
     'RedHat': {
       $puppet_master_package        = 'puppet-server'
@@ -48,12 +60,11 @@ class puppet::params {
       $puppet_agent_package         = 'puppet'
       $package_provider             = undef # falls back to system default
       $puppet_defaults              = '/etc/sysconfig/puppet'
-      $puppet_conf                  = '/etc/puppet/puppet.conf'
-      $puppet_vardir                = '/var/lib/puppet'
-      $puppet_ssldir                = '/var/lib/puppet/ssl'
       $passenger_package            = 'mod_passenger'
       $rack_package                 = 'rubygem-rack'
       $ruby_dev                     = 'ruby-devel'
+      $puppet_facter_package        = nil
+      $ruby_diff_lcs                = 'rubygem-diff-lcs'
     }
     'Suse': {
       $puppet_master_package        = 'puppet-server'
@@ -61,11 +72,10 @@ class puppet::params {
       $puppet_agent_service         = 'puppet'
       $puppet_agent_package         = 'puppet'
       $package_provider                 = undef # falls back to system default
-      $puppet_conf                  = '/etc/puppet/puppet.conf'
-      $puppet_vardir                = '/var/lib/puppet'
-      $puppet_ssldir                = '/var/lib/puppet/ssl'
       $passenger_package            = 'rubygem-passenger-apache2'
       $rack_package                 = 'rubygem-rack'
+      $puppet_facter_package        = nil
+      $ruby_diff_lcs                = 'rubygem-diff-lcs'
     }
     'Debian': {
       $puppet_master_package        = 'puppetmaster'
@@ -74,20 +84,18 @@ class puppet::params {
       $puppet_agent_package         = 'puppet'
       $package_provider                 = undef # falls back to system default
       $puppet_defaults              = '/etc/default/puppet'
-      $puppet_conf                  = '/etc/puppet/puppet.conf'
-      $puppet_vardir                = '/var/lib/puppet'
-      $puppet_ssldir                = '/var/lib/puppet/ssl'
       $passenger_package            = 'libapache2-mod-passenger'
       $rack_package                 = 'librack-ruby'
       $ruby_dev                     = 'ruby-dev'
+      $puppet_facter_package        = nil
+      $ruby_diff_lcs                = 'ruby-diff-lcs'
     }
     'FreeBSD': {
       $puppet_agent_service         = 'puppet'
       $puppet_agent_package         = 'sysutils/puppet'
       $package_provider                 = undef # falls back to system default
       $puppet_conf                  = '/usr/local/etc/puppet/puppet.conf'
-      $puppet_vardir                = '/var/puppet'
-      $puppet_ssldir                = '/var/puppet/ssl'
+      $puppet_facter_package        = nil
     }
     'Darwin': {
       $puppet_agent_service         = 'com.puppetlabs.puppet'

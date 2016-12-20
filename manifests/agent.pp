@@ -15,8 +15,8 @@
 #   ['group_id']              - The groupid of the puppet group
 #   ['splay']                 - If splay should be enable defaults to false
 #   ['splaylimit']            - The maximum time to delay before runs.
-#   ['classfile']             - The file in which puppet agent stores a list of the classes 
-#                               associated with the retrieved configuration. 
+#   ['classfile']             - The file in which puppet agent stores a list of the classes
+#                               associated with the retrieved configuration.
 #   ['logdir']                - The directory in which to store log files
 #   ['environment']           - The environment of the puppet agent
 #   ['report']                - Whether to return reports
@@ -27,6 +27,7 @@
 #   ['trusted_node_data']     - Enable the trusted facts hash
 #   ['listen']                - If puppet agent should listen for connections
 #   ['reportserver']          - The server to send transaction reports to.
+#   ['show_diff']             - Should the reports contain diff output
 #   ['digest_algorithm']      - The algorithm to use for file digests.
 #   ['templatedir']           - Template dir, if unset it will remove the setting.
 #   ['configtimeout']         - How long the client should wait for the configuration to be retrieved before considering it a failure
@@ -40,6 +41,8 @@
 #   ['localconfig']           - Where puppet agent caches the local configuration. An extension indicating the cache format is added automatically.
 #   ['rundir']                - Where Puppet PID files are kept.
 #   ['puppet_ssldir']         - Puppet sll directory
+#   ['ca_server']             - The server to use for certificate authority requests
+#   ['ca_port']               - The port to use for the certificate authority
 #
 # Actions:
 # - Install and configures the puppet agent
@@ -60,7 +63,7 @@ class puppet::agent(
   $version                = 'present',
   $puppet_facter_package  = $::puppet::params::puppet_facter_package,
   $puppet_run_style       = 'service',
-  $puppet_run_command     = '/usr/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1',
+  $puppet_run_command     = $::puppet::params::puppet_run_command,
   $user_id                = undef,
   $group_id               = undef,
   $package_provider       = $::puppet::params::package_provider,
@@ -82,7 +85,7 @@ class puppet::agent(
   $puppet_run_interval    = $::puppet::params::puppet_run_interval,
   $splay                  = false,
 
-  # $splaylimit defaults to $runinterval per Puppetlabs docs:  
+  # $splaylimit defaults to $runinterval per Puppetlabs docs:
   # http://docs.puppetlabs.com/references/latest/configuration.html#splaylimit
   $splaylimit             = $::puppet::params::puppet_run_interval,
   $classfile              = $::puppet::params::classfile,
@@ -91,6 +94,7 @@ class puppet::agent(
   $pluginsync             = true,
   $listen                 = false,
   $reportserver           = '$server',
+  $show_diff              = undef,
   $digest_algorithm       = $::puppet::params::digest_algorithm,
   $configtimeout          = '2m',
   $stringify_facts        = undef,
@@ -106,6 +110,8 @@ class puppet::agent(
   $serialization_package  = undef,
   $localconfig            = undef,
   $puppet_ssldir          = $::puppet::params::puppet_ssldir,
+  $ca_server              = undef,
+  $ca_port                = undef,
 ) inherits puppet::params {
 
   if ! defined(User[$::puppet::params::puppet_user]) {
@@ -145,7 +151,7 @@ class puppet::agent(
     $startonboot = 'no'
     $daemonize = false
   }
-  
+
 
   if ($::osfamily == 'Debian' and $puppet_run_style != 'manual') or ($::osfamily == 'Redhat') {
     file { $puppet::params::puppet_defaults:
@@ -295,7 +301,21 @@ class puppet::agent(
       value   => $puppet_ssldir,
     }
   }
-  
+
+  if $show_diff != undef {
+    ini_setting {'puppetagentshow_diff':
+      ensure  => present,
+      section => 'main',
+      setting => 'show_diff',
+      value   => $show_diff,
+    }
+    unless defined(Package[$::puppet::params::ruby_diff_lcs]) {
+      package {$::puppet::params::ruby_diff_lcs:
+        ensure  => 'latest',
+      }
+    }
+  }
+
   # rundir has no default and must be provided.
   ini_setting {'puppetagentrundir':
     ensure  => present,
@@ -382,6 +402,14 @@ class puppet::agent(
     setting => 'digest_algorithm',
     value   => $digest_algorithm,
   }
+  ini_setting {'puppetagentca_server':
+    setting => 'ca_server',
+    value   => $ca_server,
+  }
+  ini_setting {'puppetagentca_port':
+    setting => 'ca_port',
+    value   => $ca_port,
+  }
   if ($templatedir != undef) and ($templatedir != 'undef')
   {
     ini_setting {'puppetagenttemplatedir':
@@ -398,14 +426,25 @@ class puppet::agent(
       section => 'main',
     }
   }
-  ini_setting {'puppetagentconfigtimeout':
-    setting => 'configtimeout',
-    value   => $configtimeout,
-  }
-  if $stringify_facts != undef {
+  if versioncmp($::puppetversion, "4.0.0") < 0 {
+    ini_setting {'puppetagentconfigtimeout':
+      setting => 'configtimeout',
+      value   => $configtimeout,
+    }
+    if $stringify_facts != undef {
+      ini_setting {'puppetagentstringifyfacts':
+        setting => 'stringify_facts',
+        value   => $stringify_facts,
+      }
+    }
+  } else {
+    ini_setting {'puppetagentconfigtimeout':
+      ensure  => absent,
+      setting => 'configtimeout',
+    }
     ini_setting {'puppetagentstringifyfacts':
+      ensure  => absent,
       setting => 'stringify_facts',
-      value   => $stringify_facts,
     }
   }
   if $verbose != undef {
