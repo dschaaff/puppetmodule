@@ -60,7 +60,6 @@ class puppet::agent(
   $puppet_agent_service   = $::puppet::params::puppet_agent_service,
   $puppet_agent_package   = $::puppet::params::puppet_agent_package,
   $version                = 'present',
-  $puppet_facter_package  = $::puppet::params::puppet_facter_package,
   $puppet_run_style       = 'service',
   $puppet_run_command     = $::puppet::params::puppet_run_command,
   $user_id                = undef,

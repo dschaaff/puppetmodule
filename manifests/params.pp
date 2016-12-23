@@ -100,7 +100,7 @@ class puppet::params {
     }
     'Darwin': {
       $puppet_agent_service         = 'com.puppetlabs.puppet'
-      $puppet_agent_package         = "https://downloads.puppetlabs.com/mac/${mac_vers}/PC1/x86_64/puppet-agent-1.8.2-1.osx${mac_vers}.dmg"
+      $puppet_agent_package         = "https://downloads.puppetlabs.com/mac/${::macosx_productversion_major}/PC1/x86_64/puppet-agent-1.8.2-1.osx${::macosx_productversion_major}.dmg"
       $package_provider             = 'pkgdmg'
     }
     default: {
