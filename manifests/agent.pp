@@ -395,7 +395,7 @@ class puppet::agent(
     value   => $listen,
   }
   ini_setting {'puppetagentreportserver':
-    setting => 'reportserver',
+    setting => 'report_server',
     value   => $reportserver,
   }
   ini_setting {'puppetagentdigestalgorithm':
