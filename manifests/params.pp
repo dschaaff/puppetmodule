@@ -45,11 +45,13 @@ class puppet::params {
     $puppet_run_command = '/opt/puppetlabs/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
     $puppet_vardir      = '/opt/puppetlabs/server/data/puppetserver'
     $puppet_ssldir      = '/etc/puppetlabs/puppet/ssl'
+    $rundir             = '/var/run/puppetlabs'
   } else {
     $puppet_conf        = '/etc/puppet/puppet.conf'
     $puppet_run_command = '/usr/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
     $puppet_vardir      = '/var/lib/puppet'
     $puppet_ssldir      = '/var/lib/puppet/ssl'
+    $rundir             = '/var/run/puppet'
   }
 
   case $::osfamily {
