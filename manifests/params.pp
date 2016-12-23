@@ -59,7 +59,7 @@ class puppet::params {
       $puppet_master_package        = 'puppet-server'
       $puppet_master_service        = 'puppetmaster'
       $puppet_agent_service         = 'puppet'
-      $puppet_agent_package         = 'puppet'
+      $puppet_agent_package         = 'puppet-agent'
       $package_provider             = undef # falls back to system default
       $puppet_defaults              = '/etc/sysconfig/puppet'
       $passenger_package            = 'mod_passenger'
@@ -72,7 +72,7 @@ class puppet::params {
       $puppet_master_package        = 'puppet-server'
       $puppet_master_service        = 'puppetmasterd'
       $puppet_agent_service         = 'puppet'
-      $puppet_agent_package         = 'puppet'
+      $puppet_agent_package         = 'puppet-agent'
       $package_provider                 = undef # falls back to system default
       $passenger_package            = 'rubygem-passenger-apache2'
       $rack_package                 = 'rubygem-rack'
@@ -83,7 +83,7 @@ class puppet::params {
       $puppet_master_package        = 'puppetmaster'
       $puppet_master_service        = 'puppetmaster'
       $puppet_agent_service         = 'puppet'
-      $puppet_agent_package         = 'puppet'
+      $puppet_agent_package         = 'puppet-agent'
       $package_provider                 = undef # falls back to system default
       $puppet_defaults              = '/etc/default/puppet'
       $passenger_package            = 'libapache2-mod-passenger'
