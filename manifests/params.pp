@@ -100,11 +100,8 @@ class puppet::params {
     }
     'Darwin': {
       $puppet_agent_service         = 'com.puppetlabs.puppet'
-      $puppet_agent_package         = 'puppet'
-      $package_provider             = 'gem'
-      $puppet_conf                  = '/etc/puppet/puppet.conf'
-      $puppet_vardir                = '/var/lib/puppet'
-      $puppet_ssldir                = '/etc/puppet/ssl'
+      $puppet_agent_package         = "https://downloads.puppetlabs.com/mac/${mac_vers}/PC1/x86_64/puppet-agent-1.8.2-1.osx${mac_vers}.dmg"
+      $package_provider             = 'pkgdmg'
     }
     default: {
       err('The Puppet module does not support your os')

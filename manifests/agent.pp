@@ -161,14 +161,14 @@ class puppet::agent(
       content => template("puppet/${puppet::params::puppet_defaults}.erb"),
     }
   }
-  elsif $::osfamily == 'Darwin' {
-    file {'/Library/LaunchDaemons/com.puppetlabs.puppet.plist':
-      mode    => '0644',
-      owner   => 'root',
-      group   => 'wheel',
-      content => template('puppet/launchd/com.puppetlabs.puppet.plist.erb'),
-    }
-  }
+  #elsif $::osfamily == 'Darwin' {
+  #  file {'/Library/LaunchDaemons/com.puppetlabs.puppet.plist':
+  #    mode    => '0644',
+  #    owner   => 'root',
+  #    group   => 'wheel',
+  #    content => template('puppet/launchd/com.puppetlabs.puppet.plist.erb'),
+  #  }
+  #}
 
   if ! defined(File[$::puppet::params::confdir]) {
     file { $::puppet::params::confdir:
