@@ -25,7 +25,6 @@
 #   ['srv_domain']            - Domain to request the srv records
 #   ['ordering']              - The way the agent processes resources. New feature in puppet 3.3.0
 #   ['trusted_node_data']     - Enable the trusted facts hash
-#   ['listen']                - If puppet agent should listen for connections
 #   ['reportserver']          - The server to send transaction reports to.
 #   ['show_diff']             - Should the reports contain diff output
 #   ['digest_algorithm']      - The algorithm to use for file digests.
@@ -389,10 +388,6 @@ class puppet::agent(
   ini_setting {'puppetagentpluginsync':
     setting => 'pluginsync',
     value   => $pluginsync,
-  }
-  ini_setting {'puppetagentlisten':
-    setting => 'listen',
-    value   => $listen,
   }
   ini_setting {'puppetagentreportserver':
     setting => 'report_server',
