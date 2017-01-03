@@ -60,6 +60,7 @@ class puppet::agent(
   $puppet_agent_service   = $::puppet::params::puppet_agent_service,
   $puppet_agent_package   = $::puppet::params::puppet_agent_package,
   $version                = 'present',
+  $puppet_mac_version            = $::puppet::params::puppet_mac_version,
   $puppet_run_style       = 'service',
   $puppet_run_command     = $::puppet::params::puppet_run_command,
   $user_id                = undef,
@@ -129,8 +130,9 @@ class puppet::agent(
   case $::osfamily {
     'Darwin': {
       package {$puppet_agent_package:
-        ensure          => $version,
-        provider        => $package_provider,
+        ensure   => $version,
+        provider => $package_provider,
+        source   => $puppet_mac_pkg_source,
       }
     }
     default: {
@@ -160,14 +162,6 @@ class puppet::agent(
       content => template("puppet/${puppet::params::puppet_defaults}.erb"),
     }
   }
-  #elsif $::osfamily == 'Darwin' {
-  #  file {'/Library/LaunchDaemons/com.puppetlabs.puppet.plist':
-  #    mode    => '0644',
-  #    owner   => 'root',
-  #    group   => 'wheel',
-  #    content => template('puppet/launchd/com.puppetlabs.puppet.plist.erb'),
-  #  }
-  #}
 
   if ! defined(File[$::puppet::params::confdir]) {
     file { $::puppet::params::confdir:

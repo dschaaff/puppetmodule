@@ -19,7 +19,6 @@ class puppet::params {
   $storeconfigs_dbserver            = $::fqdn
   $storeconfigs_dbport              = '8081'
   $certname                         = $::fqdn
-  $confdir                          = '/etc/puppet'
   $manifest                         = '/etc/puppet/manifests/site.pp'
   $hiera_config                     = '/etc/puppet/hiera.yaml'
   $puppet_docroot                   = '/etc/puppet/rack/public/'
@@ -41,12 +40,15 @@ class puppet::params {
 
   if versioncmp($::puppetversion, "4.0.0") >= 0 {
     $puppet_conf        = '/etc/puppetlabs/puppet/puppet.conf'
+    $confdir            = '/etc/puppetlabs'
+    $manifest           = '/etc/puppet/manifests/site.pp'
     $puppet_run_command = '/opt/puppetlabs/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
     $puppet_vardir      = '/opt/puppetlabs/server/data/puppetserver'
     $puppet_ssldir      = '/etc/puppetlabs/puppet/ssl'
     $rundir             = '/var/run/puppetlabs'
   } else {
     $puppet_conf        = '/etc/puppet/puppet.conf'
+    $confdir            = '/etc/puppet'
     $puppet_run_command = '/usr/bin/puppet agent --no-daemonize --onetime --logdest syslog > /dev/null 2>&1'
     $puppet_vardir      = '/var/lib/puppet'
     $puppet_ssldir      = '/var/lib/puppet/ssl'
@@ -99,8 +101,10 @@ class puppet::params {
       $puppet_facter_package        = nil
     }
     'Darwin': {
-      $puppet_agent_service         = 'com.puppetlabs.puppet'
-      $puppet_agent_package         = "https://downloads.puppetlabs.com/mac/${::macosx_productversion_major}/PC1/x86_64/puppet-agent-1.8.2-1.osx${::macosx_productversion_major}.dmg"
+      $puppet_agent_service         = 'puppet'
+      $puppet_mac_version           = '1.8.2-1'
+      $puppet_agent_package         = "puppet-agent-${puppet_mac_version}.osx${::macosx_productversion_major}.dmg"
+      $puppet_mac_pkg_source        = "https://downloads.puppetlabs.com/mac/${::macosx_productversion_major}/PC1/x86_64/puppet-agent-${puppet_mac_version}.osx${::macosx_productversion_major}.dmg"
       $package_provider             = 'pkgdmg'
     }
     default: {
